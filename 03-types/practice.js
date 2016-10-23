@@ -1,6 +1,7 @@
 // Write a function called isDivisibleBy3 which returns `true` if a number is
 // divisible by 3, and `false` otherwise.
-var isDivisibleBy3 = function () {
+var isDivisibleBy3 = function (num) {
+  return ((num % 3) === 0);
 };
 
 
@@ -10,10 +11,14 @@ var isDivisibleBy3 = function () {
 // convert the other way, you subtract 32, and then multiply by
 // 5. Finally, you divide by 9. The division operator in JavaScript is
 // `/`.
-var celsToFahr = function () {
+var celsToFahr = function (cels) {
+  var fahr = cels * 9 / 5 + 32;
+  return fahr;
 };
 
-var fahrToCels = function () {
+var fahrToCels = function (fahr) {
+  var cels = (fahr - 32) * 5 / 9;
+  return cels;
 };
 
 
@@ -31,13 +36,15 @@ var fahrToCels = function () {
 //
 //     randUpTo(1000);
 //     //=> 236
-var randUpTo = function () {
+var randUpTo = function (limit) {
+  return Math.floor(Math.random() * limit);
 };
 
 
 // Write a function called `randBetween` that accepts two numbers representing a
 // range and returns a random whole number between those two numbers.
-var randBetween = function () {
+var randBetween = function (start, end) {
+  return start + randUpTo(end - start);
 };
 
 
@@ -56,7 +63,9 @@ var randBetween = function () {
 //
 //     isSuit("coins");
 //     //=> false
-var isSuit = function () {
+var isSuit = function (possibleSuit) {
+  var canonInput = possibleSuit.toUpperCase();
+  return canonInput === 'HEARTS' || canonInput === 'DIAMONDS' || canonInput === 'CLUBS' || canonInput === 'SPADES';
 };
 
 
@@ -72,14 +81,17 @@ var isSuit = function () {
 //
 //     isRank("one");
 //     //=> false
-var isRank = function () {
+var isRank = function (possibleRank) {
+  var canonInput = possibleRank.toUpperCase();
+  return canonInput === 'TWO' || canonInput === 'THREE' || canonInput === 'FOUR' || canonInput === 'FIVE' || canonInput === 'SIX' || canonInput === 'SEVEN' || canonInput === 'EIGHT' || canonInput === 'NINE' || canonInput === 'TEN' || canonInput === 'JACK' || canonInput === 'QUEEN' || canonInput === 'KING' || canonInput === 'ACE';
 };
 
 
 // Using the previous two functions, write a function called isCard that accepts
 // two arguments, a rank and a suit, and returns true if they are valid for a card,
 // and false otherwise.
-var isCard = function () {
+var isCard = function (rank, suit) {
+  return isRank(rank) && isSuit(suit);
 };
 
 
@@ -88,7 +100,8 @@ var isCard = function () {
 // Remember that you can use strings in comparisons in the same way that you can
 // use numbers, and the ordering is alphabetical (with capital letters having lower
 // values than their lower-case counterparts).
-var isCapitalized = function () {
+var isCapitalized = function (str) {
+  return (str[0] === (str[0].toUpperCase()));
 };
 
 
@@ -101,7 +114,16 @@ var isCapitalized = function () {
 //
 //     getHTMLText("<li>this is a list item</li>");
 //     //=> this is a list item
-var getHTMLText = function () {
+var getHTMLText = function (element) {
+  var openingTagEnd = element.indexOf('>');
+  var tag = element.slice(element.indexOf('<')+1, openingTagEnd);
+
+  var closingTag = '</' + tag + '>';
+  var closingTagStart = element.indexOf(closingTag);
+
+  var content = element.slice(openingTagEnd+1, closingTagStart);
+
+  return content;
 };
 
 
@@ -123,4 +145,5 @@ var getHTMLText = function () {
 // It may help in this case to look up the `lastIndexOf` method on the string
 // objects.
 var isHTMLElement = function () {
+
 };
