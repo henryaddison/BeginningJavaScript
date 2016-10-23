@@ -17,7 +17,18 @@
 //    isVowel("Y");
 //    //=> false
 //
-var isVowel = function () {
+var isVowel = function (char) {
+  if (typeof char !== "string") {
+    return false;
+  }
+  var result = false;
+  var lowerChar = char.toLowerCase();
+
+  if (lowerChar === "a" || lowerChar === "e" || lowerChar === "i" || lowerChar === "o" || lowerChar === "u") {
+    result = true;
+  }
+
+  return result;
 };
 
 
@@ -39,7 +50,18 @@ var isVowel = function () {
 //    isLowerCaseLetter(true);
 //    //=> false
 //
-var isLowerCaseLetter = function () {
+var isLowerCaseLetter = function (char) {
+  var result;
+  if (typeof char !== "string") {
+    result = false;
+  } else if (char.length !== 1) {
+    result = false;
+  } else if (char >= "a" && char <= "z") {
+    result = true;
+  } else {
+    result = false;
+  }
+  return result;
 };
 
 
@@ -59,7 +81,15 @@ var isLowerCaseLetter = function () {
 //     sumUpTo(-10);
 //     //=> input must be a zero or a positive number!
 //
-var sumUpTo = function () {
+var sumUpTo = function (n) {
+  if (n < 0) {
+    throw "n must not be negative"
+  }
+  var total = 0;
+  for(var i = 0; i <= n; i = i+1) {
+    total = total + i;
+  }
+  return total;
 };
 
 
@@ -82,7 +112,20 @@ var sumUpTo = function () {
 //     sumAToB("hello", "world");
 //     //=> inputs should be numbers!
 //
-var sumAToB = function () {
+var sumAToB = function (a, b) {
+  if (typeof a !== "number" || typeof b !== "number") {
+    throw "inputs should be numbers!";
+  }
+
+  var startRange = Math.min(a,b);
+  var endRange = Math.max(a,b);
+  var total = 0;
+
+  for(var i = startRange; i <= endRange; i = i+1) {
+    total = total + i;
+  }
+
+  return total;
 };
 
 
@@ -103,7 +146,18 @@ var sumAToB = function () {
 //     countVowels(true);
 //     //=> input to countVowels must be a string!
 //
-var countVowels = function () {
+var countVowels = function (string) {
+  if (typeof string !== "string") {
+    throw "input to countVowels must be a string!";
+  }
+  var total = 0;
+  for(var i = 0; i < string.length; i = i+1) {
+    var currentChar = string.charAt(i);
+    if (isVowel(currentChar)) {
+      total = total + 1;
+    }
+  }
+  return total;
 };
 
 
@@ -122,7 +176,16 @@ var countVowels = function () {
 //     reverse(true);
 //     //=> input to reverseString must be an string!
 //
-var reverseString = function () {
+var reverseString = function (string) {
+  if (typeof string !== "string") {
+    throw "input to reverseString must be a string!";
+  }
+  var result = "";
+  for(var i = string.length-1; i >= 0; i = i-1) {
+    var currentChar = string.charAt(i);
+    result = result + currentChar;
+  }
+  return result;
 };
 
 
@@ -149,7 +212,33 @@ var reverseString = function () {
 //     isPrime(-101);
 //     //=> false
 //
-var isPrime = function () {
+var isPrime = function (number) {
+  if (typeof number !== "number") {
+    return false;
+  }
+  if(number <= 1) {
+    return false;
+  }
+
+  if(Math.floor(number) !== number) {
+    return false;
+  }
+
+  if (number === 2) {
+    return true;
+  }
+
+  if (number % 2 === 0) {
+    return false;
+  }
+
+  for(var i = 3; i < number; i = i + 2) {
+    if (number % i === 0) {
+      return false;
+    }
+  }
+
+  return true;
 };
 
 
@@ -171,7 +260,17 @@ var isPrime = function () {
 //     sumPrimesUpTo("whatever");
 //     //=> input should be a number
 //
-var sumPrimesUpTo = function () {
+var sumPrimesUpTo = function (n) {
+  if (typeof n !== "number") {
+    throw "input should be a number";
+  }
+  var total = 0;
+  for(var i = 2; i <= n; i = i+1) {
+    if(isPrime(i)) {
+      total = total + i;
+    }
+  }
+  return total;
 };
 
 
@@ -196,7 +295,25 @@ var sumPrimesUpTo = function () {
 //     sumOfFirstNPrimes(-10);
 //     //=> input number should be zero or a positive number!
 //
-var sumOfFirstNPrimes = function () {
+var sumOfFirstNPrimes = function (n) {
+  if (typeof n !== "number") {
+    throw "input number should be zero or a positive number!";
+  }
+  if (n < 0) {
+    throw "input number should be zero or a positive number!";
+  }
+
+  var primesSummed = 0;
+  var total = 0;
+
+  for(var i=2; primesSummed < n; i = i + 1) {
+    if(isPrime(i)) {
+      total = total + i;
+      primesSummed = primesSummed + 1;
+    }
+  }
+
+  return total;
 };
 
 
@@ -222,11 +339,30 @@ var sumOfFirstNPrimes = function () {
 //     removeNonLetters("this is a string; it has some punctuation!");
 //     //=> thisisastringithassomepunctuation
 //
-var removeNonLetters = function () {
+var removeNonLetters = function (string) {
+  if (typeof(string) != 'string') {
+    throw "input must be a string";
+  }
+  var result = "";
+  for(var i = 0; i < string.length; i = i+1) {
+    var char = string.charAt(i);
+    var testChar = char.toLowerCase();
+    if (testChar >= 'a' && testChar <= 'z') {
+      result = result + char;
+    }
+  }
+  return result;
 };
 
 
-// Now use `removeNonLetters`, along with the `reverse` function from above to
+// Now use `removeNonLetters`, along with the `reverseString` function from above to
 // determine if the string is a palindrome.
-var isPalindrome = function () {
+var isPalindrome = function (string) {
+  if (typeof(string) != 'string') {
+    return false;
+  }
+
+  canonicalString = removeNonLetters(string).toLowerCase();
+
+  return (canonicalString == reverseString(canonicalString));
 };
