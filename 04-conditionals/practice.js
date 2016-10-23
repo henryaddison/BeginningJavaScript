@@ -12,7 +12,18 @@
 //
 //     passwordStrength("helloone");
 //     //=> medium
-var passwordStrength = function () {
+var passwordStrength = function (password) {
+  var result;
+
+  if (password.length < 7) {
+    result = "weak";
+  } else if (password.length < 10) {
+    result = "medium";
+  } else {
+    result = "strong";
+  }
+
+  return result;
 };
 
 
@@ -37,7 +48,18 @@ var passwordStrength = function () {
 //
 //      isLeapYear("hello");
 //      //=> THAT'S NOT A NUMBER!
-var isLeapYear = function () {
+var isLeapYear = function (year) {
+  if(typeof year !== "number") {
+    throw "THAT'S NOT A NUMBER!";
+  }
+
+  if ((year % 4 === 0) && (year % 100 !== 0)) {
+    return true;
+  } else if(year % 400 === 0) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 
@@ -57,7 +79,21 @@ var isLeapYear = function () {
 //
 //      firstInDictionary("whale", 5, 10);
 //      //=> ALL THREE ARGS MUST BE STRINGS!
-var firstInDictionary = function () {
+var isString = function(arg) {
+  return (typeof(arg) === 'string');
+}
+
+var firstInDictionary = function (a, b, c) {
+  if(!isString(a) || !isString(b) || !isString(c)) {
+    throw "ALL THREE ARGS MUST BE STRINGS!";
+  }
+  if (a < b && a < c) {
+    return a;
+  } else if (b < a && b < c) {
+    return b;
+  } else {
+    return c;
+  }
 };
 
 
@@ -71,20 +107,57 @@ var firstInDictionary = function () {
 //
 //     getTagName("<p>this is wrong</div>");
 //     //=> Error: Not an HTML Element!
-var getTagName = function () {
+var getTagName = function (element) {
+
+  openingTagEndIndex = element.indexOf('>');
+
+  closingTagEndIndex = element.lastIndexOf('</');
+
+  openingTag = element.slice(1,openingTagEndIndex);
+  closingTag = element.slice(closingTagEndIndex+2, -1);
+
+  if(openingTag !== closingTag) {
+    throw "Error: Not an HTML Element!";
+  } else {
+    return openingTag;
+  }
 };
 
 
 // Re-implement our improveTweet function so it can generate any of lol, omg,
 // lmao, and rofl.
-var improveTweet = function () {
-};
+var improveTweet = function (unimprovedTweet) {
+  var directedImproveTweet = function(tweet, improvement) {
+    var result = tweet;
 
+    if (tweet.toLowerCase().indexOf(improvement.toLowerCase()) === -1) {
+      // add improvement to the end of the tweet
+      result = result + " " + improvement;
+    }
+
+    return result;
+  }
+
+  var improvedTweet = 
+  directedImproveTweet(
+  directedImproveTweet(
+  directedImproveTweet(
+  directedImproveTweet(
+    unimprovedTweet,
+  'lol'),
+  'omg'),
+  'lmao'),
+  'rofl');
+
+  return improvedTweet;
+}
 
 // Write a function called `isQuestion` that returns true if the input is a
 // string and it ends in a question mark. We'll use this function in the next
 // practice problem.
-var isQuestion = function () {
+var isQuestion = function (input) {
+  var isString = (typeof(input) === 'string');
+  return (isString && (input.charAt(input.length - 1) === '?'));
 };
 
 
@@ -111,7 +184,22 @@ var isQuestion = function () {
 //
 //     magic8Ball("Is this a question?");
 //     //=> Signs point to yes
-var magic8Ball = function () {
+var magic8Ball = function (question) {
+  if (!isQuestion(question)) {
+    throw "THAT DOESN'T SOUND LIKE A QUESTION!";
+  }
+
+  var random = Math.random();
+  var result;
+  if(random < 0.5) {
+    result = "Signs point to yes";
+  } else if (random < 0.75) {
+    result = "Very doubtful";
+  } else {
+    result = "My reply is no";
+  }
+
+  return result;
 };
 
 
@@ -151,7 +239,21 @@ var magic8Ball = function () {
 //     var strWithInterjection = beginning + "-lol-" + end;
 //
 // You just have to generalize this to an arbitrary index and wrap it in a function.
-var interjectAt = function () {
+var interjectAt = function (interjection, interjectLocation, content) {
+  if (interjectLocation >= content.length) {
+    throw "Error: trying to interject at a position beyond the string length";
+  }
+
+  if (!isString(interjection) || !isString(content) || (typeof(interjectLocation) !== "number")) {
+    throw "Error: wrong types";
+  }
+
+  resultStart = content.slice(0, interjectLocation);
+  resultEnd = content.slice(interjectLocation);
+
+  result = resultStart + '-' + interjection + '-' + resultEnd;
+
+  return result;
 };
 
 
@@ -159,7 +261,15 @@ var interjectAt = function () {
 // `randomInterjection` function consists of generating a random message and a
 // random location within the string, and then calling into the `interjectAt`
 // function with the appropriate arguments.
-var randomInterject = function () {
+var randomInterject = function (content) {
+  var interjectLocation = Math.floor(Math.random()*content.length);
+  var interjection;
+  if (Math.random() < 0.5) {
+    interjection = 'lol';
+  } else {
+    interjection = 'omg';
+  }
+  return interjectAt(interjection, interjectLocation, content);
 };
 
 
