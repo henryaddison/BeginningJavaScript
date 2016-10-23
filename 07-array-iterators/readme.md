@@ -561,24 +561,54 @@ following questions.
 
 1. How many baby names start with the letter 'z'?
 
+names.filter(function(name) { return name[0] === 'z' }).length
+19
+
 2. How many baby names have the letter 'z' in them anywhere?
+
+names.filter(function(name) { return name.toLowerCase().indexOf('z') >= 0 }).length
+65
 
 3. Create a new array that contains all of the names containing a 'w' with the
 first letter upper-case.
 
+names.filter(function(name) { return name.toLowerCase().indexOf('w') >= 0 }).map(function(name) { return name[0].toUpperCase() + name.slice(1) })
+
 4. Do all of the names contain vowels?
+
+names.every(function(n) { var name = n.toLowerCase(); return name.indexOf('a') >= 0 || name.indexOf('e') >= 0 || name.indexOf('i') >= 0 || name.indexOf('o') >= 0 || name.indexOf('u') >= 0; })
+false
 
 5. Are there any names that have only two letters?
 
+names.some(function(name) { return name.length === 2 })
+true
+
 6. Is your name in the list?
+
+names.some(function(name) { return name.toLowerCase() === 'henry' })
+true
 
 7. Find the name that would come first alphabetically.
 
+names.reduce(function(currentFirst, name) { if (name < currentFirst) { currentFirst = name; } return currentFirst; })
+"aaden"
+
 8. How many times does the letter 'z' appear in the list?
 
+names.reduce(function(zCount, name) { return zCount + name.split("").reduce(function(nameZs, letter) { if (letter === 'z') { nameZs = nameZs + 1 } return nameZs }, 0) }, 0)
+65
+
 9. What is the maximum number of vowels in any name?
+
+var vowelCount = function(name) { return name.split("").filter(function(letter) { return letter === 'a' || letter === 'e' || letter === 'i' || letter === 'o' || letter === 'u' }).length }
+undefined
+names.reduce(function(mostVowels, name) { var currentVowelCount = vowelCount(name); if (currentVowelCount > mostVowels) { mostVowels = currentVowelCount } return mostVowels }, 0)
+6
 
 10. How many names have the maximum number of vowels that you found in the
 previous problem?
 
-
+var vowelCount = function(name) { return name.split("").filter(function(letter) { return letter === 'a' || letter === 'e' || letter === 'i' || letter === 'o' || letter === 'u' }).length }
+names.filter(function(name) { return vowelCount(name) === 6 }).length
+1 - maximiliano

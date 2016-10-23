@@ -8,7 +8,10 @@
 //      reverse([ "hello", "world" ]);
 //      //=> [ "world", "hello" ]
 //
-var reverse = function () {
+var reverse = function (array) {
+  return array.reduce(function(reversed, elt) {
+    return [elt].concat(reversed);
+  }, []);
 };
 
 // Did you know that you could have arrays within arrays? This is perfectly
@@ -39,7 +42,14 @@ var reverse = function () {
 //
 // You'll also want to use the `concat` method to make this work.
 //
-var flatten = function () {
+var flatten = function (multiDimArray) {
+  return multiDimArray.reduce(function(flattened, elt) {
+    if (Array.isArray(elt)) {
+      return flattened.concat(flatten(elt));
+    } else {
+      return flattened.concat(elt);
+    }
+  }, []);
 };
 
 // Using `range` and a chain of array methods, write a function that accepts a
@@ -55,7 +65,34 @@ var flatten = function () {
 //     sumOfMultiplesOf3And5(0);
 //     //=> 0
 //
-var sumOfMultiplesOf3And5 = function () {
+
+var range = function (begin,end) {
+  if(typeof(begin) != "number" || typeof(end) != "number") {
+    throw "arguments to range must be numbers"
+  }
+
+  var step;
+  if(begin < end) {
+    step = 1;
+  } else {
+    step = -1;
+  }
+
+  var values = [];
+
+  for(var i = begin; i*step <= end*step; i = i + step) {
+    values.push(i);
+  }
+
+  return values;
+};
+
+var sumOfMultiplesOf3And5 = function (n) {
+  return range(0,n).filter(function(i) { 
+    return (i > 0) && ((i % 3 === 0) || (i % 5 === 0));
+  }).reduce(function(sum, term) { 
+    return sum + term 
+  }, 0);
 };
 
 // Write a function called atLeastOneVowel that accepts a string and
@@ -71,7 +108,14 @@ var sumOfMultiplesOf3And5 = function () {
 //     atLeastOneVowel("sdfjkl");
 //     //=> false
 //
-var atLeastOneVowel = function () {
+var atLeastOneVowel = function (string) {
+  var isVowel = function(l) {
+    var letter = l.toLowerCase();
+    return letter === 'a' || letter === 'e' || letter === 'i' || letter === 'o' || letter === 'u';
+  }
+  return string.split("").some(function(letter) {
+    return isVowel(letter);
+  })
 };
 
 // Write a function that accepts a list of tweets, and returns the
@@ -84,7 +128,15 @@ var atLeastOneVowel = function () {
 //     longestAwesomeTweet([ "hello", "world" ]);
 //     //=> ""
 //
-var longestAwesomeTweet = function () {
+var longestAwesomeTweet = function (tweets) {
+  return tweets.filter(function(tweet) {
+    return (tweet.toLowerCase().indexOf("awesome") >= 0);
+  }).reduce(function(longest, tweet) {
+    if(tweet.length > longest.length) {
+      longest = tweet;
+    }
+    return longest;
+  }, "");
 };
 
 // Write a function that accepts an array of HTMLElements and returns an
@@ -96,7 +148,22 @@ var longestAwesomeTweet = function () {
 //     elementsToContent([ "<h1>This is an important heading!</h1>", "<h5>this is not as important</h5>" ]);
 //     //=> [ "This is an important heading!", "this is not as important" ]
 //
-var elementsToContent = function () {
+var getHTMLText = function (element) {
+  var openingTagEnd = element.indexOf('>');
+  var tag = element.slice(element.indexOf('<')+1, openingTagEnd);
+
+  var closingTag = '</' + tag + '>';
+  var closingTagStart = element.indexOf(closingTag);
+
+  var content = element.slice(openingTagEnd+1, closingTagStart);
+
+  return content;
+};
+
+var elementsToContent = function (elements) {
+  return elements.map(function(elt) {
+    return getHTMLText(elt);
+  });
 };
 
 // In a previous section, we created a function called `randUpTo` that
@@ -112,7 +179,14 @@ var elementsToContent = function () {
 //     randomArray(5, 10);
 //     //=> [ 2, 0, 3, 9, 10 ]
 //
-var randomArray = function () {
+var randUpTo = function (limit) {
+  return Math.floor(Math.random() * limit);
+};
+
+var randomArray = function (length, max) {
+  return range(1,length).map(function(i) {
+    return randUpTo(max);
+  });
 };
 
 // Using the `randomNums` function from above, write a function called
@@ -126,5 +200,9 @@ var randomArray = function () {
 // randomElements([ "clubs", "diamonds", "hearts", "spades" ], 3);
 // //=> [ "hearts", "diamonds", "hearts" ]
 //
-var randomElements = function () {
+var randomElements = function (elements, n) {
+  var indexes = randomArray(n, elements.length)
+  return indexes.map(function(i) {
+    return elements[i];
+  });
 };
