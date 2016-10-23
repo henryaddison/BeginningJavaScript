@@ -14,7 +14,16 @@
 //     containsTwice(10, [10, 10, 10, 10, 10]);
 //     //=> false
 //
-var containsTwice = function () {
+var containsTwice = function (testValue, actualValues) {
+  var appearanceCount = 0;
+  for(var i = 0; i < actualValues.length; i = i + 1) {
+    var currentValue = actualValues[i];
+    if(testValue === currentValue) {
+      appearanceCount = appearanceCount + 1;
+    }
+  }
+
+  return appearanceCount === 2;
 };
 
 
@@ -30,7 +39,16 @@ var containsTwice = function () {
 //     containsNTimes(0, 5, [ 1, 2, 3, 4, 5 ]);
 //     //=> false
 //
-var containsNTimes = function () {
+var containsNTimes = function (n, testValue, actualValues) {
+  var appearanceCount = 0;
+  for(var i = 0; i < actualValues.length; i = i + 1) {
+    var currentValue = actualValues[i];
+    if(testValue === currentValue) {
+      appearanceCount = appearanceCount + 1;
+    }
+  }
+
+  return appearanceCount === n;
 };
 
 
@@ -50,7 +68,19 @@ var containsNTimes = function () {
 //     atLeastOneEven("hello");
 //     //=> input should be an array!
 //
-var atLeastOneEven = function () {
+var atLeastOneEven = function (actualValues) {
+  if (!Array.isArray(actualValues)) {
+    throw "input should be an array!";
+  }
+  var evenCount = 0;
+  for(var i = 0; i < actualValues.length; i = i + 1) {
+    var currentValue = actualValues[i];
+    if(currentValue % 2 === 0) {
+      evenCount = evenCount + 1;
+    }
+  }
+
+  return evenCount >= 1;
 };
 
 
@@ -70,7 +100,19 @@ var atLeastOneEven = function () {
 // Although the tests will not be checking for this, try to make your loop exit
 // as soon as it finds a non-string entry in the array.
 //
-var allStrings = function () {
+var allStrings = function (actualValues) {
+  if (!Array.isArray(actualValues)) {
+    throw "input should be an array!";
+  }
+  var result = true;
+  for(var i = 0; i < actualValues.length; i = i + 1) {
+    var currentValue = actualValues[i];
+    if(typeof(currentValue) !== "string") {
+      result = false;
+    }
+  }
+
+  return result;
 };
 
 
@@ -96,7 +138,20 @@ var allStrings = function () {
 // as soon as it finds an element in the first array that appears twice in the second
 // array.
 //
-var containsAnyTwice = function () {
+var containsAnyTwice = function (testValues, actualValues) {
+  if (!Array.isArray(testValues) || !Array.isArray(actualValues)) {
+    throw "containsAnyTwice expects two arguments, both of which should be an array.";
+  }
+  var result = false;
+
+  for(var i = 0; !result && i<testValues.length; i = i+1) {
+    var testValue = testValues[i];
+    if (containsNTimes(2, testValue, actualValues)) {
+      result = true;
+    }
+  }
+
+  return result;
 };
 
 
@@ -125,7 +180,23 @@ var containsAnyTwice = function () {
 //     getValuesAppearingTwice(["hello", "world", "goodbye"])
 //     //=> []
 //
-var getValuesAppearingTwice = function () {
+var getValuesAppearingTwice = function (actualValues) {
+  if (!Array.isArray(actualValues)) {
+    throw "input should be an array!";
+  }
+
+  var appearedTwice = [];
+
+  for(var i = 0; i<actualValues.length; i = i+1) {
+    var testValue = actualValues[i];
+    if (containsNTimes(2, testValue, actualValues)) {
+      if(appearedTwice.indexOf(testValue) < 0) {
+        appearedTwice.push(testValue);
+      }
+    }
+  }
+
+  return appearedTwice;
 };
 
 
@@ -148,7 +219,25 @@ var getValuesAppearingTwice = function () {
 //     range("hello", "world");
 //     //=> arguments to range must be numbers
 //
-var range = function () {
+var range = function (begin,end) {
+  if(typeof(begin) != "number" || typeof(end) != "number") {
+    throw "arguments to range must be numbers"
+  }
+
+  var step;
+  if(begin < end) {
+    step = 1;
+  } else {
+    step = -1;
+  }
+
+  var values = [];
+
+  for(var i = begin; i*step <= end*step; i = i + step) {
+    values.push(i);
+  }
+
+  return values;
 };
 
 
@@ -173,7 +262,47 @@ var range = function () {
 //     mapToTags([ "not an html element" ]);
 //     //=> all entries must be html elements!
 //
-var mapToTags = function () {
+var mapToTags = function (elements) {
+  var isHTMLElement = function (str) {
+    var openTag = str.substring(str.indexOf("<") + 1, str.indexOf(">"));
+    var closeTag = str.substring(str.lastIndexOf("</") + 2, str.lastIndexOf(">"));
+    return str.charAt(0) === "<" && str.charAt(str.length - 1) === ">" && openTag === closeTag;
+  };
+
+  var getTagName = function (element) {
+    if (!isHTMLElement(element)) {
+      throw "Error: Not an HTML Element!";
+    }
+    openingTagEndIndex = element.indexOf('>');
+
+    closingTagEndIndex = element.lastIndexOf('</');
+
+    openingTag = element.slice(1,openingTagEndIndex);
+    closingTag = element.slice(closingTagEndIndex+2, -1);
+
+    if(openingTag !== closingTag) {
+      throw "Error: Not an HTML Element!";
+    } else {
+      return openingTag;
+    }
+  };
+
+  if(!Array.isArray(elements)) {
+    throw "wat?"
+  }
+
+  var tags = []
+
+  for(var i = 0; i < elements.length; i = i + 1) {
+    var element = elements[i];
+    if(!isHTMLElement(element)) {
+      throw "all entries must be html elements";
+    }
+
+    tags.push(getTagName(element));
+  }
+
+  return tags;
 };
 
 
@@ -197,5 +326,25 @@ var mapToTags = function () {
 //     filterToLol(["this is a string", false, 5]);
 //     //=> all entries must be strings!
 //
-var filterToLol = function () {
+var filterToLol = function (tweets) {
+  if(!Array.isArray(tweets)) {
+    throw "no can do.";
+  }
+
+  lolTweets = [];
+
+  for(var i = 0; i < tweets.length; i = i + 1) {
+    var tweet = tweets[i]
+    if (!typeof(tweet) === "string") {
+      throw "all entries must be strings!";
+    }
+
+    tweetLC = tweet.toLowerCase();
+
+    if(tweetLC.indexOf("lol") >= 0) {
+      lolTweets.push(tweet);
+    }
+  }
+
+  return lolTweets;
 };
