@@ -145,5 +145,7 @@ var getHTMLText = function (element) {
 // It may help in this case to look up the `lastIndexOf` method on the string
 // objects.
 var isHTMLElement = function () {
-
+  var openTag = str.substring(str.indexOf("<") + 1, str.indexOf(">"));
+  var closeTag = str.substring(str.lastIndexOf("</") + 2, str.lastIndexOf(">"));
+  return str.charAt(0) === "<" && str.charAt(str.length - 1) === ">" && openTag === closeTag;
 };
