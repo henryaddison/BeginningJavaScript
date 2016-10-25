@@ -423,10 +423,19 @@ write a little later. Interact with the console and answer the following
 questions.
 
 1. Which suit appears the most frequently?
+cards.reduce(function(counts, card) { if (!counts[card.suit]) {counts[card.suit] = 0}; counts[card.suit] = counts[card.suit]+1; return counts}, {})
+Object {clubs: 1238, diamonds: 1252, hearts: 1257, spades: 1253}
 
 2. Which rank appears the most frequently?
 
+var rankCount = cards.reduce(function(counts, card) { if (!counts[card.rank]) {counts[card.rank] = 0}; counts[card.rank] = counts[card.rank]+1; return counts}, {});
+Object.keys(rankCount).reduce(function(maxRank, rank) { if (rankCount[rank] > (rankCount[maxRank] || 0)) { maxRank = rank }; return maxRank }, null)
+"queen"
+
 3. How many times does the ace of spades appear? What about the two of clubs?
+
+cards.filter(function(card) { return card.rank === "ace" && card.suit === "spades" }).length
+105
 
 4. Can you think of a way to determine which card appears the most frequently?
 Obviously, you can repeat the process above for all 52 combinations, but is
@@ -447,18 +456,45 @@ of Sunday, October 26, 2014. Using our favorite array methods (`map`, `filter`,
 5. Create an array that only contains only the tweet texts that contain the word
 "awesome" (upper or lower case). How many tweets are in the array?
 
+tweets.filter(function(tweet) { return tweet.text.toLowerCase().indexOf("awesome") >= 0 }).length
+3
+
 6. How many of the tweets contains URLs in them? (You can just look for "http:"
 as a substring).
+
+tweets.filter(function(tweet) { return tweet.text.toLowerCase().indexOf("http:") >= 0 }).length
+176
 
 7. How many of the tweets are associated with users who have underscores ("_")
 in their screen name?
 
+tweets.filter(function(tweet) { return tweet.user. screen_name.indexOf("_") >= 0 }).length
+138
+
 8. What is the screen name of the user with the most followers?
+
+tweets.reduce(function(mostFollowed, tweet) { 
+if(tweet.user.followers_count > mostFollowed.followers_count) {
+ mostFollowed = tweet.user;
+}
+return mostFollowed;
+}, tweets[0].user).screen_name
+"HannahSimone"
 
 9. The "statuses_count" property of a user object contains the number of tweets
 that the user has tweeted. How many users have tweeted exactly 1 tweet? What are
 their screen names?
 
+tweets.filter(function(tweet) { return tweet.user.statuses_count === 1 }).length
+2
+
+tweets.filter(function(tweet) { return tweet.user.statuses_count === 1 }).map(function(tweet) { return tweet.user.screen_name })
+["asukab3bn4", "katashi4d24y"]
+
 10. What is the average number of followers among those users associated with
 tweets that contain "lol" (case insensitive)?
 
+var followerCounts = tweets.filter(function(tweet) { return tweet.text.toLowerCase().indexOf("lol") >= 0 }).map(function(tweet) { return tweet.user.followers_count })
+
+followerCounts.reduce(function(sum, term) { return sum + term })/followerCounts.length
+752.4
