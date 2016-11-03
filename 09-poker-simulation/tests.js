@@ -186,9 +186,9 @@ describe("#isHand", function () {
 
 describe("#dealHand", function () {
     it ("should return a hand of 5 cards", function () {
-        expect(Array.isArray(dealHand())).toBe(true);
-        expect(dealHand().length === 5);
-        expect(dealHand().every(function (c) {
+        expect(Array.isArray(dealHand(deck))).toBe(true);
+        expect(dealHand(deck).length === 5);
+        expect(dealHand(deck).every(function (c) {
             return isCard(c);
         })).toBe(true);
     });
