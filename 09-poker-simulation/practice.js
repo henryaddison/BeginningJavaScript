@@ -59,7 +59,15 @@ var createDeck = function () {
 
 // fisher-yates shuffle
 var shuffle = function (deck) {
-  return deck;
+  var drawnDeck = deck;
+  var shuffledDeck = [];
+  while(drawnDeck.length > 0) {
+    var cardIndex = Math.floor(Math.random() * drawnDeck.length);
+    var card = drawnDeck[cardIndex];
+    shuffledDeck.push(card);
+    drawnDeck = drawnDeck.slice(0,cardIndex).concat(drawnDeck.slice(cardIndex+1,drawnDeck.length));
+  }
+  return shuffledDeck;
 };
 
 // return true if the input is an array of 5 valid cards
